@@ -1,0 +1,9 @@
+import pygame, math
+
+SCREEN_HEIGHT = 288
+SCREEN_WIDTH = 244
+
+GAME_TILES = (28, 31)
+TILE_SIZE = 8
+
+PACMAN_SPEED = 100
