@@ -3,18 +3,31 @@ from src.settings import *
 
 
 class Player():
-    def __init__(self):
-        self.surface = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
-        pygame.draw.circle(self.surface, "yellow", (TILE_SIZE / 2, TILE_SIZE / 2), TILE_SIZE / 2,)
+    def __init__(self, tileset):
+        self.sprites = {
+            "left-open": tileset.subsurface(TILESET["pacman-open-left"]),
+            "up-open": tileset.subsurface(TILESET["pacman-open-up"]),
+            "right-open": tileset.subsurface(TILESET["pacman-open-right"]),
+            "down-open": tileset.subsurface(TILESET["pacman-open-down"]),
+            "left-closed": tileset.subsurface(TILESET["pacman-closed-left"]),
+            "up-closed": tileset.subsurface(TILESET["pacman-closed-up"]),
+            "right-closed": tileset.subsurface(TILESET["pacman-closed-right"]),
+            "down-closed": tileset.subsurface(TILESET["pacman-closed-down"]),
+        }
+        self.surface = self.sprites["left-open"]
+        
         self.pos = pygame.Vector2(8, 8)
-        self.rect = pygame.Rect(self.pos.x, self.pos.y, self.surface.get_width(), self.surface.get_height())
+        self.width, self.height = 8, 8
+        self.surface_width, self.surface_height = 16, 16
+        self.rect = pygame.Rect(self.pos.x, self.pos.y, self.width, self.height)
 
         self.dir = pygame.Vector2(0, 0)
+        self.sprite_dir = "left"
     
 
 
     def draw(self):
-        return (self.surface, self.rect)
+        return (self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height))
     
 
 
@@ -30,8 +43,16 @@ class Player():
             self.dir.x = 1
 
 
+        dx, dy = self.pos.x, self.pos.y
+
+
         self.pos.x += PLAYER_SPEED * self.dir.x * dt
         collision = self.check_collision(collrects)
+
+        dx -= self.pos.x
+        if dx > 0: self.sprite_dir = "left"
+        if dx < 0: self.sprite_dir = "right"
+
         if collision and self.dir.x:
             self.pos.x = collision[0] - (self.rect.width * self.dir.x)
             self.dir.x = 0
@@ -39,6 +60,11 @@ class Player():
 
         self.pos.y += PLAYER_SPEED * self.dir.y * dt
         collision = self.check_collision(collrects)
+
+        dy -= self.pos.y
+        if dy > 0: self.sprite_dir = "up"
+        if dy < 0: self.sprite_dir = "down"
+        
         if collision and self.dir.y:
             self.pos.y = collision[1] - (self.rect.height * self.dir.y)
             self.dir.y = 0
@@ -51,9 +77,11 @@ class Player():
             self.pos.x = -self.rect.width
             self.pos.y = 14*TILE_SIZE
 
-        
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
+
+        if not (dx == 0 and dy == 0):
+            self.surface = self.sprites[f"{self.sprite_dir}-open"]
     
 
 

@@ -1,3 +1,5 @@
+import pygame
+
 TILE_HORIZONTAL = 28
 TILE_VERTICAL = 31
 TILE_SIZE = 8
@@ -5,3 +7,60 @@ SCREEN_WIDTH = TILE_HORIZONTAL * TILE_SIZE
 SCREEN_HEIGHT = TILE_VERTICAL * TILE_SIZE
 
 PLAYER_SPEED = 100.0
+
+TILESET = {
+    "topleft-corner-inside": pygame.Rect(0,0,8,8),
+    "topright-corner-inside": pygame.Rect(8,0,8,8),
+    "bottomright-corner-outside": pygame.Rect(16,0,8,8),
+    "bottomleft-corner-outside": pygame.Rect(24,0,8,8),
+    "bottom-wall-thin": pygame.Rect(32,0,8,8),
+    "right-wall-thin":  pygame.Rect(40,0,8,8),
+    "left-wall-thin": pygame.Rect(48,0,8,8),
+    "bottom-wall-thick": pygame.Rect(56,0,8,8),
+    "bottomleft-corner-inside": pygame.Rect(0,8,8,8),
+    "bottomright-corner-inside": pygame.Rect(8,8,8,8),
+    "topright-corner-outside": pygame.Rect(16,8,8,8),
+    "topleft-corner-outside": pygame.Rect(24,8,8,8),
+    "top-wall-thin": pygame.Rect(32,8,8,8),
+    "right-wall-thick": pygame.Rect(40,8,8,8),
+    "left-wall-thick": pygame.Rect(48,8,8,8),
+    "top-wall-thick": pygame.Rect(56,8,8,8),
+    "topleft-corner-square": pygame.Rect(0,16,8,8),
+    "topright-corner-square": pygame.Rect(8,16,8,8),
+    "left-gate": pygame.Rect(16,16,8,8),
+    "right-gate": pygame.Rect(24,16,8,8),
+    "topleft-corner-thick": pygame.Rect(32,16,8,8),
+    "topright-corner-thick": pygame.Rect(40,16,8,8),
+    "pellet": pygame.Rect(48,16,8,8),
+    "bottomleft-corner-square": pygame.Rect(0,24,8,8),
+    "bottomright-corner-square": pygame.Rect(8,24,8,8),
+    "main-gate": pygame.Rect(16,24,8,8),
+    "blank": pygame.Rect(24,24,8,8),
+    "bottomleft-corner-thick": pygame.Rect(32,24,8,8),
+    "bottomright-corner-thick": pygame.Rect(40,24,8,8),
+    "powerup": pygame.Rect(48,24,8,8),
+    "blinky-up": pygame.Rect(0,32,16,16),
+    "clyde-up": pygame.Rect(16,32,16,16),
+    "inky-up": pygame.Rect(32,32,16,16),
+    "pinky-up": pygame.Rect(48,32,16,16),
+    "blinky-left": pygame.Rect(0,48,16,16),
+    "clyde-left": pygame.Rect(16,48,16,16),
+    "inky-left": pygame.Rect(32,48,16,16),
+    "pinky-left": pygame.Rect(48,48,16,16),
+    "blinky-right": pygame.Rect(0,64,16,16),
+    "clyde-right": pygame.Rect(16,64,16,16),
+    "inky-right": pygame.Rect(32,64,16,16),
+    "pinky-right": pygame.Rect(48,64,16,16),
+    "blinky-down": pygame.Rect(0,80,16,16),
+    "clyde-down": pygame.Rect(16,80,16,16),
+    "inky-down": pygame.Rect(32,80,16,16),
+    "pinky-down": pygame.Rect(40,80,16,16),
+    "pacman-open-left": pygame.Rect(0,96,16,16),
+    "pacman-open-up": pygame.Rect(16,96,16,16),
+    "pacman-open-right": pygame.Rect(32,96,16,16),
+    "pacman-open-down": pygame.Rect(48,96,16,16),
+    "pacman-closed-left": pygame.Rect(0,112,16,16),
+    "pacman-closed-up": pygame.Rect(16,112,16,16),
+    "pacman-closed-right": pygame.Rect(32,112,16,16),
+    "pacman-closed-down": pygame.Rect(48,112,16,16),
+}

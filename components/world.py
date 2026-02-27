@@ -3,7 +3,7 @@ from src.settings import *
 
 
 class World:
-    def __init__(self):
+    def __init__(self, tilset):
         self.tiles = self.init_tiles()
         self.map = self.init_map()
 

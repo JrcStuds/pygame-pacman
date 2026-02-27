@@ -4,6 +4,7 @@ from .world import World
 from .player import Player
 
 
+
 class Game:
     def __init__(self):
         pygame.init()
@@ -14,8 +15,11 @@ class Game:
 
         self.keys = {"up": False, "down": False, "left": False, "right": False}
 
-        self.world = World()
-        self.player = Player()
+        self.tileset = pygame.image.load('./assets/tileset.png').convert()
+        self.tileset.set_colorkey((0,0,0))
+
+        self.world = World(self.tileset)
+        self.player = Player(self.tileset)
 
 
     def handle_events(self):
