@@ -3,102 +3,84 @@ from src.settings import *
 
 
 class World:
-    def __init__(self, tilset):
-        self.tiles = self.init_tiles()
+    def __init__(self, tileset):
+        self.tiles = {
+            "blank": tileset.subsurface(TILESET["blank"]),
+            "topleft-corner-inside": tileset.subsurface(TILESET["topleft-corner-inside"]),
+            "topright-corner-inside": tileset.subsurface(TILESET["topright-corner-inside"]),
+            "bottomleft-corner-inside": tileset.subsurface(TILESET["bottomleft-corner-inside"]),
+            "bottomright-corner-inside": tileset.subsurface(TILESET["bottomright-corner-inside"]),
+            "topleft-corner-outside": tileset.subsurface(TILESET["topleft-corner-outside"]),
+            "topright-corner-outside": tileset.subsurface(TILESET["topright-corner-outside"]),
+            "bottomleft-corner-outside": tileset.subsurface(TILESET["bottomleft-corner-outside"]),
+            "bottomright-corner-outside": tileset.subsurface(TILESET["bottomright-corner-outside"]),
+            "topleft-corner-thick": tileset.subsurface(TILESET["topleft-corner-thick"]),
+            "topright-corner-thick": tileset.subsurface(TILESET["topright-corner-thick"]),
+            "bottomleft-corner-thick": tileset.subsurface(TILESET["bottomleft-corner-thick"]),
+            "bottomright-corner-thick": tileset.subsurface(TILESET["bottomright-corner-thick"]),
+            "topleft-corner-square": tileset.subsurface(TILESET["topleft-corner-square"]),
+            "topright-corner-square": tileset.subsurface(TILESET["topright-corner-square"]),
+            "bottomleft-corner-square": tileset.subsurface(TILESET["bottomleft-corner-square"]),
+            "bottomright-corner-square": tileset.subsurface(TILESET["bottomright-corner-square"]),
+            "top-wall-thin": tileset.subsurface(TILESET["top-wall-thin"]),
+            "bottom-wall-thin": tileset.subsurface(TILESET["bottom-wall-thin"]),
+            "left-wall-thin": tileset.subsurface(TILESET["left-wall-thin"]),
+            "right-wall-thin": tileset.subsurface(TILESET["right-wall-thin"]),
+            "top-wall-thick": tileset.subsurface(TILESET["top-wall-thick"]),
+            "bottom-wall-thick": tileset.subsurface(TILESET["bottom-wall-thick"]),
+            "left-wall-thick": tileset.subsurface(TILESET["left-wall-thick"]),
+            "right-wall-thick": tileset.subsurface(TILESET["right-wall-thick"]),
+            "left-gate": tileset.subsurface(TILESET["left-gate"]),
+            "right-gate": tileset.subsurface(TILESET["right-gate"]),
+            "main-gate": tileset.subsurface(TILESET["main-gate"]),
+            "pellet": tileset.subsurface(TILESET["pellet"]),
+            "powerup": tileset.subsurface(TILESET["powerup"]),
+        }
         self.map = self.init_map()
 
 
 
-    def init_tiles(self):
-        # 0x = full colour
-        # 1x = side
-        # 2x = outer corner
-        # 3x = inner corner
-        # 4x = misc
-        tiles = {}
-
-        tiles[0] = pygame.Surface((TILE_SIZE, TILE_SIZE)) # empty
-        tiles[0].fill("black")
-
-        tiles[1] = pygame.Surface((TILE_SIZE, TILE_SIZE)) # wall
-        tiles[1].fill("blue")
-
-        tiles[2] = pygame.Surface((TILE_SIZE, TILE_SIZE)) # pellet
-        tiles[2].fill("black")
-        pygame.draw.rect(
-            tiles[2],
-            "white",
-            (
-                TILE_SIZE * (3 / 8),
-                TILE_SIZE * (3 / 8),
-                TILE_SIZE / 4,
-                TILE_SIZE / 4
-            )
-        )
-
-        tiles[3] = pygame.Surface((TILE_SIZE, TILE_SIZE))
-        tiles[3].fill("black")
-        pygame.draw.rect(
-            tiles[3],
-            "blue",
-            (
-                TILE_SIZE / 2,
-                TILE_SIZE / 2,
-                TILE_SIZE / 2,
-                TILE_SIZE / 2
-            )
-        )
-
-        tiles[4] = pygame.Surface((TILE_SIZE, TILE_SIZE))
-        tiles[4].fill("black")
-        pygame.draw.rect(
-            tiles[4],
-            "blue",
-            (
-                0,
-                TILE_SIZE / 2,
-                TILE_SIZE / 2,
-                TILE_SIZE / 2
-            )
-        )
-
-        return tiles
-
-
-
     def init_map(self):
+        """
+        0 - empty
+        1 - pellet
+        2 - thin wall
+        3 - thick wall
+        4 - square wall
+        5 - gate
+        """
         m = [
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
-            [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1,],
-            [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1,],
-            [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1,],
-            [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1,],
-            [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,],
-            [1,2,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,2,1,],
-            [1,2,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,2,1,],
-            [1,2,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,2,1,],
-            [1,1,1,1,1,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,1,1,1,0,1,1,0,1,1,1,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,1,0,0,0,0,0,0,1,0,1,1,2,1,1,1,1,1,1,],
-            [0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,1,0,0,0,2,0,0,0,0,0,0,],
-            [1,1,1,1,1,1,2,1,1,0,1,0,0,0,0,0,0,1,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,0,0,0,0,0,0,0,0,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,],
-            [1,1,1,1,1,1,2,1,1,0,1,1,1,1,1,1,1,1,0,1,1,2,1,1,1,1,1,1,],
-            [1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1,],
-            [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1,],
-            [1,2,1,1,1,1,2,1,1,1,1,1,2,1,1,2,1,1,1,1,1,2,1,1,1,1,2,1,],
-            [1,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,1,],
-            [1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1,],
-            [1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1,],
-            [1,2,2,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,1,1,2,2,2,2,2,2,1,],
-            [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,],
-            [1,2,1,1,1,1,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,2,1,],
-            [1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,],
+            [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,],
+            [3,1,1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,1,1,1,1,1,3,],
+            [3,1,2,2,2,2,1,2,2,2,2,2,1,3,3,1,2,2,2,2,2,1,2,2,2,2,1,3,],
+            [3,1,2,2,2,2,1,2,2,2,2,2,1,3,3,1,2,2,2,2,2,1,2,2,2,2,1,3,],
+            [3,1,2,2,2,2,1,2,2,2,2,2,1,3,3,1,2,2,2,2,2,1,2,2,2,2,1,3,],
+            [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,],
+            [3,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,3,],
+            [3,1,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,1,3,],
+            [3,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,3,],
+            [3,3,3,3,3,3,1,2,2,2,2,2,0,2,2,0,2,2,2,2,2,1,3,3,3,3,3,3,],
+            [0,0,0,0,0,3,1,2,2,2,2,2,0,2,2,0,2,2,2,2,2,1,3,0,0,0,0,0,],
+            [0,0,0,0,0,3,1,2,2,0,0,0,0,0,0,0,0,0,0,2,2,1,3,0,0,0,0,0,],
+            [0,0,0,0,0,3,1,2,2,0,4,4,5,5,5,5,4,4,0,2,2,1,3,0,0,0,0,0,],
+            [3,3,3,3,3,3,1,2,2,0,4,0,0,0,0,0,0,4,0,2,2,1,3,3,3,3,3,3,],
+            [0,0,0,0,0,0,1,0,0,0,4,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,0,0,],
+            [3,3,3,3,3,3,1,2,2,0,4,0,0,0,0,0,0,4,0,2,2,1,3,3,3,3,3,3,],
+            [0,0,0,0,0,3,1,2,2,0,4,4,4,4,4,4,4,4,0,2,2,1,3,0,0,0,0,0,],
+            [0,0,0,0,0,3,1,2,2,0,0,0,0,0,0,0,0,0,0,2,2,1,3,0,0,0,0,0,],
+            [0,0,0,0,0,3,1,2,2,0,2,2,2,2,2,2,2,2,0,2,2,1,3,0,0,0,0,0,],
+            [3,3,3,3,3,3,1,2,2,0,2,2,2,2,2,2,2,2,0,2,2,1,3,3,3,3,3,3,],
+            [3,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,3,],
+            [3,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,3,],
+            [3,1,2,2,2,2,1,2,2,2,2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2,1,3,],
+            [3,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,1,1,1,3,],
+            [3,3,3,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,3,3,3,],
+            [3,3,3,1,2,2,1,2,2,1,2,2,2,2,2,2,2,2,1,2,2,1,2,2,1,3,3,3,],
+            [3,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,2,2,1,1,1,1,1,1,3,],
+            [3,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,3,],
+            [3,1,2,2,2,2,2,2,2,2,2,2,1,2,2,1,2,2,2,2,2,2,2,2,2,2,1,3,],
+            [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,],
+            [3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,],
         ]
         return m
 
@@ -109,7 +91,24 @@ class World:
         fblits = []
         for i, row in enumerate(self.map):
             for j, cell in enumerate(row):
-                fblits.append((self.tiles[cell], (j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE)))
+                pos = (j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE)
+
+                match cell:
+                    case 0: 
+                        fblits.append((self.tiles["blank"], pos))
+                    case 1: 
+                        fblits.append((self.tiles["pellet"], pos))
+                    case 2: pass
+                    case 3: pass
+                    case 4: pass
+                    case 5: 
+                        if self.map[i][j-1] != 5:
+                            fblits.append((self.tiles["left-gate"], pos))
+                        elif self.map[i][j+1] != 5:
+                            fblits.append((self.tiles["right-gate"], pos))
+                        else:
+                            fblits.append((self.tiles["main-gate"], pos))
+
         return fblits
     
 

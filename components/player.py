@@ -23,11 +23,14 @@ class Player():
 
         self.dir = pygame.Vector2(0, 0)
         self.sprite_dir = "left"
+        self.framecount = 0
+        self.mouth_state = "open"
     
 
 
     def draw(self):
-        return (self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height))
+        blits = [(self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height)),]
+        return blits
     
 
 
@@ -43,15 +46,8 @@ class Player():
             self.dir.x = 1
 
 
-        dx, dy = self.pos.x, self.pos.y
-
-
         self.pos.x += PLAYER_SPEED * self.dir.x * dt
         collision = self.check_collision(collrects)
-
-        dx -= self.pos.x
-        if dx > 0: self.sprite_dir = "left"
-        if dx < 0: self.sprite_dir = "right"
 
         if collision and self.dir.x:
             self.pos.x = collision[0] - (self.rect.width * self.dir.x)
@@ -60,10 +56,6 @@ class Player():
 
         self.pos.y += PLAYER_SPEED * self.dir.y * dt
         collision = self.check_collision(collrects)
-
-        dy -= self.pos.y
-        if dy > 0: self.sprite_dir = "up"
-        if dy < 0: self.sprite_dir = "down"
         
         if collision and self.dir.y:
             self.pos.y = collision[1] - (self.rect.height * self.dir.y)
@@ -77,11 +69,28 @@ class Player():
             self.pos.x = -self.rect.width
             self.pos.y = 14*TILE_SIZE
 
+
         self.rect.x = self.pos.x
         self.rect.y = self.pos.y
+        
 
-        if not (dx == 0 and dy == 0):
-            self.surface = self.sprites[f"{self.sprite_dir}-open"]
+        if self.dir.x > 0:
+            self.sprite_dir = "right"
+        if self.dir.x < 0:
+            self.sprite_dir = "left"
+        if self.dir.y > 0:
+            self.sprite_dir = "down"
+        if self.dir.y < 0:
+            self.sprite_dir = "up"
+
+
+        self.framecount += 1
+        if self.framecount >= 10:
+            self.mouth_state = "closed" if self.mouth_state == "open" else "open"
+            self.framecount = 0
+
+
+        self.surface = self.sprites[f"{self.sprite_dir}-{self.mouth_state}"]
     
 
 

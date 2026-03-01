@@ -55,7 +55,7 @@ class Game:
     def draw(self):
         fblits = []
         fblits.extend(self.world.draw())
-        fblits.append(self.player.draw())
+        fblits.extend(self.player.draw())
         self.screen.fblits(fblits)
         pygame.display.flip()
 
