@@ -2,6 +2,7 @@ import pygame
 from src.settings import *
 from .world import World
 from .player import Player
+from .inky import Inky
 
 
 
@@ -13,6 +14,9 @@ class Game:
         self.dt = 0
         self.running = True
 
+        pygame.joystick.init()
+        self.joystick = None
+
         self.keys = {"up": False, "down": False, "left": False, "right": False}
 
         self.tileset = pygame.image.load('./assets/tileset.png').convert()
@@ -20,6 +24,7 @@ class Game:
 
         self.world = World(self.tileset)
         self.player = Player(self.tileset)
+        self.ghosts = [Inky(self.tileset),]
 
 
     def handle_events(self):
@@ -40,6 +45,22 @@ class Game:
                     case pygame.K_DOWN: self.keys["down"] = False
                     case pygame.K_LEFT: self.keys["left"] = False
                     case pygame.K_RIGHT: self.keys["right"] = False
+
+            if event.type == pygame.JOYAXISMOTION:
+                if event.axis == 0:
+                    if event.value >= 0.5: self.keys["right"], self.keys["left"] = True, False
+                    elif event.value <= -0.5: self.keys["right"], self.keys["left"] = False, True
+                    else: self.keys["right"], self.keys["left"] = False, False
+                if event.axis == 1:
+                    if event.value >= 0.5: self.keys["down"], self.keys["up"] = True, False
+                    elif event.value <= -0.5: self.keys["down"], self.keys["up"] = False, True
+                    else: self.keys["down"], self.keys["up"] = False, False
+
+            if event.type == pygame.JOYDEVICEADDED:
+                self.joystick = pygame.joystick.Joystick(0)
+            if event.type == pygame.JOYDEVICEREMOVED:
+                self.joystick = None
+
             
     
 
@@ -50,12 +71,17 @@ class Game:
         self.player.update(self.keys, wall_rects, self.dt)
         pellet_collision = self.player.check_pellet_collision(pellet_rects)
         self.world.pellet_collision(pellet_collision)
+        for ghost in self.ghosts:
+            ghost.update(self.world.map, wall_rects, self.dt)
 
 
     def draw(self):
+        self.screen.fill("black")
         fblits = []
         fblits.extend(self.world.draw())
         fblits.extend(self.player.draw())
+        for ghost in self.ghosts:
+            fblits.extend(ghost.draw())
         self.screen.fblits(fblits)
         pygame.display.flip()
 
@@ -67,4 +93,5 @@ class Game:
             self.draw()
             self.dt = self.clock.tick(60) / 1000
         
+        pygame.joystick.quit()
         pygame.quit()
