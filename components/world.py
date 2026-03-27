@@ -83,7 +83,7 @@ class World:
 
     def draw(self):
         fblits = []
-        fblits.append((self.map_sprite, (0, 0, TILE_SIZE*TILE_HORIZONTAL, TILE_SIZE*TILE_VERTICAL)))
+        fblits.append((self.map_sprite, (0, 0, TILE_SIZE*TILE_HORIZONTAL, TILE_SIZE*GAME_TILE_VERTICAL)))
 
         for i, row in enumerate(self.map):
             for j, cell in enumerate(row):

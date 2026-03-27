@@ -63,9 +63,9 @@ class Player():
 
 
         if self.pos.x <= -self.rect.width - 1:
-            self.pos.x = SCREEN_WIDTH
+            self.pos.x = GAME_SIZE[0]
             self.pos.y = 14*TILE_SIZE
-        if self.pos.x >= SCREEN_WIDTH + 1:
+        if self.pos.x >= GAME_SIZE[0] + 1:
             self.pos.x = -self.rect.width
             self.pos.y = 14*TILE_SIZE
 

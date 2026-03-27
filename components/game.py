@@ -6,13 +6,15 @@ from .ghosts.blinky import Blinky
 from .ghosts.pinky import Pinky
 from .ghosts.inky import Inky
 from .ghosts.clyde import Clyde
+from .header import Header
 
 
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SCALED | pygame.RESIZABLE)
+        self.display = pygame.display.set_mode(DISPLAY_SIZE, pygame.SCALED | pygame.RESIZABLE)
+        self.game_screen = pygame.Surface(GAME_SIZE)
         self.clock = pygame.time.Clock()
         self.dt = 0
         self.running = True
@@ -29,6 +31,9 @@ class Game:
         self.player = Player(self.tileset)
         self.ghosts = [Blinky(self.tileset), Pinky(self.tileset), Inky(self.tileset), Clyde(self.tileset)]
         print(self.ghosts[0].name, self.ghosts[0].pos)
+
+        self.text_tileset = pygame.image.load('./assets/text.png').convert()
+        self.header = Header(self.text_tileset)
 
 
     def handle_events(self):
@@ -74,20 +79,32 @@ class Game:
         pellet_rects = world_rects["pellet"]
         self.player.update(self.keys, wall_rects, self.dt)
         pellet_collision = self.player.check_pellet_collision(pellet_rects)
-        self.world.pellet_collision(pellet_collision)
+        if pellet_collision:
+            self.world.pellet_collision(pellet_collision)
+            self.header.score += PELLET_SCORE
         for ghost in self.ghosts:
             ghost.update(self.world.map, wall_rects, self.dt)
             ghost.set_target(self.player.pos, self.player.dir, self.ghosts[0].pos)
 
 
     def draw(self):
-        self.screen.fill("black")
-        fblits = []
+        self.display.fill("black")
+        self.game_screen.fill("black")
+
+        fblits = [] # for game_screen
         fblits.extend(self.world.draw())
         fblits.extend(self.player.draw())
         for ghost in self.ghosts:
             fblits.extend(ghost.draw())
-        self.screen.fblits(fblits)
+        self.game_screen.fblits(fblits)
+
+        fblits = []
+        fblits.append((self.game_screen, (0, 3*TILE_SIZE)))
+        fblits.extend(self.header.draw())
+        self.display.fblits(fblits)
+
+        #pygame.transform.scale_by(self.game_screen, self.game_screen.width / self.display.width)
+        #self.display.blit(self.game_screen, (0, 16))
         pygame.display.flip()
 
 

@@ -15,7 +15,7 @@ class Blinky(Ghost):
         self.sprites["left"] = tileset.subsurface(TILESET[f"{self.name}-left"])
         self.sprites["right"] = tileset.subsurface(TILESET[f"{self.name}-right"])
 
-        self.pos = pygame.Vector2((1) * TILE_SIZE, (TILE_VERTICAL - 2) * TILE_SIZE)
+        self.pos = pygame.Vector2((1) * TILE_SIZE, (GAME_TILE_VERTICAL - 2) * TILE_SIZE)
         self.dir = pygame.Vector2(0, -1)
         self.target = pygame.Vector2(0, 0)
 

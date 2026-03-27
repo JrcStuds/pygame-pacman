@@ -47,9 +47,9 @@ class Ghost():
 
 
         if self.pos.x <= -self.rect.width - 1:
-            self.pos.x = SCREEN_WIDTH
+            self.pos.x = GAME_SIZE[0]
             self.pos.y = 14*TILE_SIZE
-        if self.pos.x >= SCREEN_WIDTH + 1:
+        if self.pos.x >= GAME_SIZE[0] + 1:
             self.pos.x = -self.rect.width
             self.pos.y = 14*TILE_SIZE
 
@@ -74,14 +74,7 @@ class Ghost():
         # Change Direction
 
         simple_pos = (math.floor(self.pos.x // TILE_SIZE), math.floor(self.pos.y // TILE_SIZE))
-        """
-        dirs = [
-            ((0,-1), (simple_pos[0], simple_pos[1] - 1), map[simple_pos[1] - 1][simple_pos[0]]),
-            ((-1,0), (simple_pos[0] - 1, simple_pos[1]), map[simple_pos[1]][simple_pos[0] - 1]),
-            ((0,1), (simple_pos[0], simple_pos[1] + 1), map[simple_pos[1] + 1][simple_pos[0]]),
-            ((1,0), (simple_pos[0] + 1, simple_pos[1]), map[simple_pos[1]][simple_pos[0] + 1])
-        ]
-        """
+
         dirs = [
             [(0,-1), (simple_pos[0], simple_pos[1] - 1)],
             [(-1,0), (simple_pos[0] - 1, simple_pos[1])],
@@ -147,14 +140,7 @@ class Ghost():
 
 
     def draw(self):
-        dot = pygame.Surface((8, 8))
-        match self.name:
-            case "blinky": dot.fill("red")
-            case "pinky": dot.fill("pink")
-            case "inky": dot.fill("cyan")
-            case "clyde": dot.fill("orange")
         blits = [
             (self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height)),
-            (dot, (self.target.x * TILE_SIZE, self.target.y * TILE_SIZE, 8, 8))
         ]
         return blits
