@@ -2,7 +2,10 @@ import pygame
 from src.settings import *
 from .world import World
 from .player import Player
-from .inky import Inky
+from .ghosts.blinky import Blinky
+from .ghosts.pinky import Pinky
+from .ghosts.inky import Inky
+from .ghosts.clyde import Clyde
 
 
 
@@ -24,7 +27,8 @@ class Game:
 
         self.world = World(self.tileset)
         self.player = Player(self.tileset)
-        self.ghosts = [Inky(self.tileset),]
+        self.ghosts = [Blinky(self.tileset), Pinky(self.tileset), Inky(self.tileset), Clyde(self.tileset)]
+        print(self.ghosts[0].name, self.ghosts[0].pos)
 
 
     def handle_events(self):
@@ -73,6 +77,7 @@ class Game:
         self.world.pellet_collision(pellet_collision)
         for ghost in self.ghosts:
             ghost.update(self.world.map, wall_rects, self.dt)
+            ghost.set_target(self.player.pos, self.player.dir, self.ghosts[0].pos)
 
 
     def draw(self):

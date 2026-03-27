@@ -30,7 +30,7 @@ class Ghost():
 
         # Movement
         
-        self.pos.x += PLAYER_SPEED * self.dir.x * dt
+        self.pos.x += GHOST_SPEED * self.dir.x * dt
         collision = self.check_collision(collrects)
 
         if collision and self.dir.x:
@@ -38,7 +38,7 @@ class Ghost():
             self.dir.x = 0
 
 
-        self.pos.y += PLAYER_SPEED * self.dir.y * dt
+        self.pos.y += GHOST_SPEED * self.dir.y * dt
         collision = self.check_collision(collrects)
         
         if collision and self.dir.y:
@@ -74,37 +74,50 @@ class Ghost():
         # Change Direction
 
         simple_pos = (math.floor(self.pos.x // TILE_SIZE), math.floor(self.pos.y // TILE_SIZE))
-        
-        dirs = [(0,-1), (-1,0), (0,1), (1,0)]
+        """
+        dirs = [
+            ((0,-1), (simple_pos[0], simple_pos[1] - 1), map[simple_pos[1] - 1][simple_pos[0]]),
+            ((-1,0), (simple_pos[0] - 1, simple_pos[1]), map[simple_pos[1]][simple_pos[0] - 1]),
+            ((0,1), (simple_pos[0], simple_pos[1] + 1), map[simple_pos[1] + 1][simple_pos[0]]),
+            ((1,0), (simple_pos[0] + 1, simple_pos[1]), map[simple_pos[1]][simple_pos[0] + 1])
+        ]
+        """
+        dirs = [
+            [(0,-1), (simple_pos[0], simple_pos[1] - 1)],
+            [(-1,0), (simple_pos[0] - 1, simple_pos[1])],
+            [(0,1), (simple_pos[0], simple_pos[1] + 1)],
+            [(1,0), (simple_pos[0] + 1, simple_pos[1])],
+        ]
+
         checked_squares = []
 
         # Check for valid move squares
-        for i, dir in enumerate(dirs):
-            # ignore the direction if it is a 180 deg turn
-            if (self.dir.y == dir[1] * -1 and self.dir.y != 0) or (self.dir.x == dir[0] * -1 and self.dir.x != 0):
+        for dir in dirs:
+
+            try:
+                dir.append(map[dir[1][1]][dir[1][0]])
+            except:
+                dir.append(0)
+            
+            if (dir[0][0] * -1 == self.dir.x and self.dir.x != 0) or (dir[0][1] * -1 == self.dir.y and self.dir.y != 0):
                 checked_squares.append(None)
                 continue
-            
-            try:   
-                scan = (simple_pos[0] + dirs[i][0], simple_pos[1] + dirs[i][1])
-                if map[scan[1]][scan[0]] == 1: checked_squares.append(None)
-                else: checked_squares.append(scan)
-            except:
-                # cell doesn't exist
-                checked_squares.append(None)
-            
-            print(i, simple_pos, dir, scan, map[scan[1]][scan[0]], checked_squares)
 
-        change_dir = (None, 2000)
+            if dir[2] != 1:
+                checked_squares.append(dir[1])
+            else:
+                checked_squares.append(None)
+        
+        change_dir = (None, 2000000)
         for i, square in enumerate(checked_squares):
             if square == None: continue
             square_dist = (self.target[0] - square[0])**2 + (self.target[1] - square[1])**2
             if square_dist < change_dir[1]:
-                change_dir = (dirs[i], square_dist)
+                change_dir = (dirs[i][0], square_dist)
 
-        #self.dir = pygame.Vector2(change_dir[0][0], change_dir[0][1])
-        self.dir.x = change_dir[0][0] if change_dir[0][0] != 0 else self.dir.x
-        self.dir.y = change_dir[0][1] if change_dir[0][1] != 0 else self.dir.y
+        if change_dir[0]:
+            self.dir.x = change_dir[0][0] if change_dir[0][0] != 0 else self.dir.x
+            self.dir.y = change_dir[0][1] if change_dir[0][1] != 0 else self.dir.y
     
 
 
@@ -134,5 +147,14 @@ class Ghost():
 
 
     def draw(self):
-        blits = [(self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height)),]
+        dot = pygame.Surface((8, 8))
+        match self.name:
+            case "blinky": dot.fill("red")
+            case "pinky": dot.fill("pink")
+            case "inky": dot.fill("cyan")
+            case "clyde": dot.fill("orange")
+        blits = [
+            (self.surface, (self.pos.x - self.width / 2, self.pos.y - self.width / 2, self.surface_width, self.surface_height)),
+            (dot, (self.target.x * TILE_SIZE, self.target.y * TILE_SIZE, 8, 8))
+        ]
         return blits

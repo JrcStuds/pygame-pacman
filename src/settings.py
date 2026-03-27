@@ -7,7 +7,7 @@ SCREEN_WIDTH = TILE_HORIZONTAL * TILE_SIZE
 SCREEN_HEIGHT = TILE_VERTICAL * TILE_SIZE
 
 PLAYER_SPEED = 80
-GHOST_SPEED = 75
+GHOST_SPEED = 65
 
 TILESET = {
     "topleft-corner-inside": pygame.Rect(0,0,8,8),
@@ -55,7 +55,7 @@ TILESET = {
     "blinky-down": pygame.Rect(0,80,16,16),
     "clyde-down": pygame.Rect(16,80,16,16),
     "inky-down": pygame.Rect(32,80,16,16),
-    "pinky-down": pygame.Rect(40,80,16,16),
+    "pinky-down": pygame.Rect(48,80,16,16),
     "pacman-open-left": pygame.Rect(0,96,16,16),
     "pacman-open-up": pygame.Rect(16,96,16,16),
     "pacman-open-right": pygame.Rect(32,96,16,16),
