@@ -4,17 +4,12 @@ from src.settings import *
 
 class Player():
     def __init__(self, tileset):
-        self.sprites = {
-            "left-open": tileset.subsurface(TILESET["pacman-open-left"]),
-            "up-open": tileset.subsurface(TILESET["pacman-open-up"]),
-            "right-open": tileset.subsurface(TILESET["pacman-open-right"]),
-            "down-open": tileset.subsurface(TILESET["pacman-open-down"]),
-            "left-closed": tileset.subsurface(TILESET["pacman-closed-left"]),
-            "up-closed": tileset.subsurface(TILESET["pacman-closed-up"]),
-            "right-closed": tileset.subsurface(TILESET["pacman-closed-right"]),
-            "down-closed": tileset.subsurface(TILESET["pacman-closed-down"]),
-        }
-        self.surface = self.sprites["left-open"]
+        self.sprites = {}
+        for sprite in TILESET_SPRITES.keys():
+            if sprite[0:6] == "pacman":
+                self.sprites[sprite] = tileset.subsurface(TILESET_SPRITES[sprite])
+
+        self.surface = self.sprites["pacman-closed"]
         
         self.pos = pygame.Vector2(8, 8)
         self.width, self.height = 8, 8
@@ -24,7 +19,7 @@ class Player():
         self.dir = pygame.Vector2(0, 0)
         self.sprite_dir = "left"
         self.framecount = 0
-        self.mouth_state = "open"
+        self.mouth_state = "closed"
     
 
 
@@ -85,18 +80,17 @@ class Player():
 
 
         self.framecount += 1
-        if self.framecount >= 10:
-            self.mouth_state = "closed" if self.mouth_state == "open" else "open"
+        if self.framecount >= 8:
+            match self.mouth_state:
+                case "closed": self.mouth_state = "1"
+                case "1": self.mouth_state = "2"
+                case "2": self.mouth_state = "closed"
             self.framecount = 0
 
-
-        self.surface = self.sprites[f"{self.sprite_dir}-{self.mouth_state}"]
-    
-
-
-    def check_pellet_collision(self, rects):
-        collision = self.check_collision(rects)
-        return collision
+        if self.mouth_state == "closed":
+            self.surface = self.sprites["pacman-closed"]
+        else:
+            self.surface = self.sprites[f"pacman-{self.sprite_dir}-{self.mouth_state}"]
 
 
 

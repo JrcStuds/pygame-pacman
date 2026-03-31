@@ -10,12 +10,14 @@ class Blinky(Ghost):
 
         self.name = "blinky"
         
-        self.sprites["up"] = tileset.subsurface(TILESET[f"{self.name}-up"])
-        self.sprites["down"] = tileset.subsurface(TILESET[f"{self.name}-down"])
-        self.sprites["left"] = tileset.subsurface(TILESET[f"{self.name}-left"])
-        self.sprites["right"] = tileset.subsurface(TILESET[f"{self.name}-right"])
+        for sprite in TILESET_SPRITES.keys():
+            if sprite[0] == "g":
+                self.sprites[sprite[6:]] = tileset.subsurface(TILESET_SPRITES[sprite])
+            if sprite[0] == self.name[0]:
+                self.sprites[sprite[(len(self.name) + 1):]] = tileset.subsurface(TILESET_SPRITES[sprite])
+        print(self.sprites)
 
-        self.pos = pygame.Vector2((1) * TILE_SIZE, (GAME_TILE_VERTICAL - 2) * TILE_SIZE)
+        self.pos = pygame.Vector2(11*TILE_SIZE, 11*TILE_SIZE)
         self.dir = pygame.Vector2(0, -1)
         self.target = pygame.Vector2(0, 0)
 

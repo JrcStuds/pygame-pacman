@@ -24,13 +24,13 @@ class Game:
 
         self.keys = {"up": False, "down": False, "left": False, "right": False}
 
-        self.tileset = pygame.image.load('./assets/tileset.png').convert()
+        self.tileset = pygame.image.load('./assets/sprites.png').convert()
         self.tileset.set_colorkey((0,0,0))
-
-        self.world = World(self.tileset)
         self.player = Player(self.tileset)
         self.ghosts = [Blinky(self.tileset), Pinky(self.tileset), Inky(self.tileset), Clyde(self.tileset)]
-        print(self.ghosts[0].name, self.ghosts[0].pos)
+
+        self.map_sprite = pygame.image.load('./assets/map.png').convert()
+        self.world = World(self.map_sprite)
 
         self.text_tileset = pygame.image.load('./assets/text.png').convert()
         self.header = Header(self.text_tileset)
@@ -78,13 +78,15 @@ class Game:
         wall_rects = world_rects["wall"]
         pellet_rects = world_rects["pellet"]
         self.player.update(self.keys, wall_rects, self.dt)
-        pellet_collision = self.player.check_pellet_collision(pellet_rects)
+        pellet_collision = self.player.check_collision(pellet_rects)
         if pellet_collision:
             self.world.pellet_collision(pellet_collision)
             self.header.score += PELLET_SCORE
         for ghost in self.ghosts:
             ghost.update(self.world.map, wall_rects, self.dt)
             ghost.set_target(self.player.pos, self.player.dir, self.ghosts[0].pos)
+            if self.player.check_collision([ghost.rect]):
+                print(f"{ghost.name} killed pacman")
 
 
     def draw(self):

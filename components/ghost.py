@@ -5,24 +5,22 @@ from src.settings import *
 
 class Ghost():
     def __init__(self):
+        self.name = ""
         self.state = "scatter"
         
-        self.sprites = {
-            "up": None,
-            "down": None,
-            "left": None,
-            "right": None,
-            "frightened": None,
-        }
+        self.sprites = {}
 
         self.width, self.height = 8, 8
         self.surface_width, self.surface_height = 16, 16
 
         self.pos = pygame.Vector2()
         self.dir = pygame.Vector2()
-        self.sprite_dir = "up"
         self.rect = pygame.Rect(self.pos.x, self.pos.y, 8, 8)
         self.target = pygame.Vector2()
+
+        self.sprite_dir = "up"
+        self.framecount = 0
+        self.anim_frame = 1
 
 
     
@@ -67,8 +65,15 @@ class Ghost():
         if self.dir.y < 0:
             self.sprite_dir = "up"
 
+        if self.framecount >= 10:
+            self.framecount = 0
+            match self.anim_frame:
+                case 1: self.anim_frame = 2
+                case 2: self.anim_frame = 1
+        self.framecount += 1
 
-        self.surface = self.sprites[self.sprite_dir]
+
+        self.surface = self.sprites[f"{self.sprite_dir}-{self.anim_frame}"]
 
 
         # Change Direction
