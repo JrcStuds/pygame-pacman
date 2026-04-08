@@ -2,11 +2,8 @@ import pygame
 from src.settings import *
 from .world import World
 from .player import Player
-from .ghosts.blinky import Blinky
-from .ghosts.pinky import Pinky
-from .ghosts.inky import Inky
-from .ghosts.clyde import Clyde
 from .header import Header
+from components.ghosts.ghost import Ghost
 
 
 
@@ -27,7 +24,12 @@ class Game:
         self.tileset = pygame.image.load('./assets/sprites.png').convert()
         self.tileset.set_colorkey((0,0,0))
         self.player = Player(self.tileset)
-        self.ghosts = [Blinky(self.tileset), Pinky(self.tileset), Inky(self.tileset), Clyde(self.tileset)]
+        self.ghosts = [
+            Ghost("blinky", game=self),
+            Ghost("pinky", game=self),
+            Ghost("inky", game=self),
+            Ghost("clyde", game=self),
+        ]
 
         self.map_sprite = pygame.image.load('./assets/map.png').convert()
         self.world = World(self.map_sprite)
@@ -82,11 +84,13 @@ class Game:
         if pellet_collision:
             self.world.pellet_collision(pellet_collision)
             self.header.score += PELLET_SCORE
-        for ghost in self.ghosts:
+        """for ghost in self.ghosts:
             ghost.update(self.world.map, wall_rects, self.dt)
             ghost.set_target(self.player.pos, self.player.dir, self.ghosts[0].pos)
             if self.player.check_collision([ghost.rect]):
-                print(f"{ghost.name} killed pacman")
+                print(f"{ghost.name} killed pacman")"""
+        for ghost in self.ghosts:
+            ghost.update()
 
 
     def draw(self):
@@ -105,8 +109,6 @@ class Game:
         fblits.extend(self.header.draw())
         self.display.fblits(fblits)
 
-        #pygame.transform.scale_by(self.game_screen, self.game_screen.width / self.display.width)
-        #self.display.blit(self.game_screen, (0, 16))
         pygame.display.flip()
 
 

@@ -114,3 +114,61 @@ TILESET_TEXT = {
     "8": pygame.Rect(64, 16, 8, 8),
     "9": pygame.Rect(72, 16, 8, 8),
 }
+
+SCATTER_TILES = {
+    "pinky": (2, -3),
+    "blinky": (25, -3),
+    "clyde": (0, 32),
+    "inky": (27, 32),
+}
+
+DIRECTIONS = {
+    (0, 1): "down",
+    (0, -1): "up",
+    (1, 0): "right",
+    (-1, 0): "left",
+}
+
+INTERSECTION_TILES = [
+    pygame.Vector2(6, 1),
+    pygame.Vector2(21, 1),
+    pygame.Vector2(1, 5),
+    pygame.Vector2(6, 5),
+    pygame.Vector2(9, 5),
+    pygame.Vector2(12, 5),
+    pygame.Vector2(15, 5),
+    pygame.Vector2(18, 5),
+    pygame.Vector2(21, 5),
+    pygame.Vector2(26, 5),
+    pygame.Vector2(6, 8),
+    pygame.Vector2(21, 8),
+    pygame.Vector2(12, 11),
+    pygame.Vector2(15, 11),
+    pygame.Vector2(6, 14),
+    pygame.Vector2(9, 14),
+    pygame.Vector2(18, 14),
+    pygame.Vector2(21, 14),
+    pygame.Vector2(9, 17),
+    pygame.Vector2(18, 17),
+    pygame.Vector2(6, 20),
+    pygame.Vector2(9, 20),
+    pygame.Vector2(18, 20),
+    pygame.Vector2(21, 20),
+    pygame.Vector2(6, 23),
+    pygame.Vector2(9, 23),
+    pygame.Vector2(12, 23),
+    pygame.Vector2(15, 23),
+    pygame.Vector2(18, 23),
+    pygame.Vector2(21, 23),
+    pygame.Vector2(3, 26),
+    pygame.Vector2(24, 26),
+    pygame.Vector2(12, 29),
+    pygame.Vector2(15, 29),
+]
+
+SPECIAL_INTERSECTION_TILES = [
+    pygame.Vector2(12, 11),
+    pygame.Vector2(15, 11),
+    pygame.Vector2(12, 23),
+    pygame.Vector2(15, 23),
+]
