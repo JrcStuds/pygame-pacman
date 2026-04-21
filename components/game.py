@@ -19,17 +19,24 @@ class Game:
         pygame.joystick.init()
         self.joystick = None
 
-        self.keys = {"up": False, "down": False, "left": False, "right": False}
+        self.keys = {
+            "up": [pygame.K_UP, pygame.K_w],
+            "down": [pygame.K_DOWN, pygame.K_s],
+            "left": [pygame.K_LEFT, pygame.K_a],
+            "right": [pygame.K_RIGHT, pygame.K_d],
+        }
+        self.controls = {"up": False, "down": False, "left": False, "right": False}
 
         self.tileset = pygame.image.load('./assets/sprites.png').convert()
         self.tileset.set_colorkey((0,0,0))
-        self.player = Player(self.tileset)
+        self.player = Player(self)
         self.ghosts = [
             Ghost("blinky", game=self),
             Ghost("pinky", game=self),
             Ghost("inky", game=self),
             Ghost("clyde", game=self),
         ]
+        self.ghost_state_timer = [0, "chase"]
 
         self.map_sprite = pygame.image.load('./assets/map.png').convert()
         self.world = World(self.map_sprite)
@@ -44,28 +51,24 @@ class Game:
                 self.running = False
 
             if event.type == pygame.KEYDOWN:
-                match event.key:
-                    case pygame.K_UP: self.keys["up"] = True
-                    case pygame.K_DOWN: self.keys["down"] = True
-                    case pygame.K_LEFT: self.keys["left"] = True
-                    case pygame.K_RIGHT: self.keys["right"] = True
+                for key in self.keys.keys():
+                    if event.key in self.keys[key]:
+                        self.controls[key] = True
 
             if event.type == pygame.KEYUP:
-                match event.key:
-                    case pygame.K_UP: self.keys["up"] = False
-                    case pygame.K_DOWN: self.keys["down"] = False
-                    case pygame.K_LEFT: self.keys["left"] = False
-                    case pygame.K_RIGHT: self.keys["right"] = False
+                for key in self.keys.keys():
+                    if event.key in self.keys[key]:
+                        self.controls[key] = False
 
             if event.type == pygame.JOYAXISMOTION:
                 if event.axis == 0:
-                    if event.value >= 0.5: self.keys["right"], self.keys["left"] = True, False
-                    elif event.value <= -0.5: self.keys["right"], self.keys["left"] = False, True
-                    else: self.keys["right"], self.keys["left"] = False, False
+                    if event.value >= 0.5: self.controls["right"], self.controls["left"] = True, False
+                    elif event.value <= -0.5: self.controls["right"], self.controls["left"] = False, True
+                    else: self.controls["right"], self.controls["left"] = False, False
                 if event.axis == 1:
-                    if event.value >= 0.5: self.keys["down"], self.keys["up"] = True, False
-                    elif event.value <= -0.5: self.keys["down"], self.keys["up"] = False, True
-                    else: self.keys["down"], self.keys["up"] = False, False
+                    if event.value >= 0.5: self.controls["down"], self.controls["up"] = True, False
+                    elif event.value <= -0.5: self.controls["down"], self.controls["up"] = False, True
+                    else: self.controls["down"], self.controls["up"] = False, False
 
             if event.type == pygame.JOYDEVICEADDED:
                 self.joystick = pygame.joystick.Joystick(0)
@@ -79,18 +82,21 @@ class Game:
         world_rects = self.world.get_rects()
         wall_rects = world_rects["wall"]
         pellet_rects = world_rects["pellet"]
-        self.player.update(self.keys, wall_rects, self.dt)
+        self.player.update(self.controls, wall_rects, self.dt)
         pellet_collision = self.player.check_collision(pellet_rects)
         if pellet_collision:
             self.world.pellet_collision(pellet_collision)
             self.header.score += PELLET_SCORE
-        """for ghost in self.ghosts:
-            ghost.update(self.world.map, wall_rects, self.dt)
-            ghost.set_target(self.player.pos, self.player.dir, self.ghosts[0].pos)
-            if self.player.check_collision([ghost.rect]):
-                print(f"{ghost.name} killed pacman")"""
         for ghost in self.ghosts:
             ghost.update()
+            if self.player.check_collision([ghost.rect]):
+                print(f"{ghost.name} killed pacman")
+
+        self.ghost_state_timer[0] += 1
+        if self.ghost_state_timer[0] >= 20*60 and self.ghost_state_timer[1] == "chase":
+            self.ghost_state_timer = [0, "scatter"]
+        if self.ghost_state_timer[0] >= 7*60 and self.ghost_state_timer[1] == "scatter":
+            self.ghost_state_timer = [0, "chase"]
 
 
     def draw(self):

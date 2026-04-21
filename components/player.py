@@ -3,20 +3,25 @@ from src.settings import *
 
 
 class Player():
-    def __init__(self, tileset):
-        self.sprites = {}
-        for sprite in TILESET_SPRITES.keys():
-            if sprite[0:6] == "pacman":
-                self.sprites[sprite] = tileset.subsurface(TILESET_SPRITES[sprite])
+    def __init__(self, game):
+        self.game = game
 
-        self.surface = self.sprites["pacman-closed"]
-        
-        self.pos = pygame.Vector2(8, 8)
+        self.tileset = pygame.image.load('./assets/sprites.png').convert()
+        self.tileset.set_colorkey((0, 0, 0))
+
+        self.sprites = self.init_sprites()
+        self.surface = self.sprites["closed"]
+
         self.width, self.height = 8, 8
         self.surface_width, self.surface_height = 16, 16
+        
+        self.pos = pygame.Vector2(8, 8)
+        self.dir = pygame.Vector2(0, 1)
+        self.next_dir = pygame.Vector2(0, 1)
         self.rect = pygame.Rect(self.pos.x, self.pos.y, self.width, self.height)
 
-        self.dir = pygame.Vector2(0, 0)
+        self.last_tile = None
+
         self.sprite_dir = "left"
         self.framecount = 0
         self.mouth_state = "closed"
@@ -29,19 +34,14 @@ class Player():
     
 
 
-    def update(self, keys, collrects, dt):
+    def update(self, controls, collrects, dt):
+        if controls["up"]: self.dir.y = -1
+        elif controls["down"]: self.dir.y = 1
+        elif controls["left"]: self.dir.x = -1
+        elif controls["right"]: self.dir.x = 1
 
-        if keys["up"]:
-            self.dir.y = -1
-        if keys["down"]:
-            self.dir.y = 1
-        if keys["left"]:
-            self.dir.x = -1
-        if keys["right"]:
-            self.dir.x = 1
+        self.pos.x += PLAYER_SPEED * self.dir.x * self.game.dt
 
-
-        self.pos.x += PLAYER_SPEED * self.dir.x * dt
         collision = self.check_collision(collrects)
 
         if collision and self.dir.x:
@@ -88,9 +88,21 @@ class Player():
             self.framecount = 0
 
         if self.mouth_state == "closed":
-            self.surface = self.sprites["pacman-closed"]
+            self.surface = self.sprites["closed"]
         else:
-            self.surface = self.sprites[f"pacman-{self.sprite_dir}-{self.mouth_state}"]
+            self.surface = self.sprites[f"{self.sprite_dir}-{self.mouth_state}"]
+
+        
+
+
+    
+    def init_sprites(self):
+        sprites = {}
+        name = "pacman"
+        for sprite in TILESET_SPRITES.keys():
+            if sprite[:len(name)] == name:
+                sprites[sprite[ len(name) + 1:]] = self.tileset.subsurface(TILESET_SPRITES[sprite])
+        return sprites
 
 
 

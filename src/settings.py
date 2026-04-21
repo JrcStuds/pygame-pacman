@@ -1,14 +1,19 @@
 import pygame
 
+GOD_MODE = True
+SHOW_GHOST_TARGETS = False
+
 TILE_HORIZONTAL = 28
 GAME_TILE_VERTICAL = 31
-DISPAY_TILE_VERTICAL = 36
+DISPLAY_TILE_VERTICAL = 36
 TILE_SIZE = 8
 GAME_SIZE = (TILE_HORIZONTAL * TILE_SIZE, GAME_TILE_VERTICAL * TILE_SIZE)
-DISPLAY_SIZE = (TILE_HORIZONTAL * TILE_SIZE, DISPAY_TILE_VERTICAL * TILE_SIZE)
+DISPLAY_SIZE = (TILE_HORIZONTAL * TILE_SIZE, DISPLAY_TILE_VERTICAL * TILE_SIZE)
 
 PLAYER_SPEED = 80
 GHOST_SPEED = 65
+GHOST_HOME_SPEED = 40
+GHOST_TRANSITION_SPEED = 10
 
 PELLET_SCORE = 10
 
@@ -116,10 +121,31 @@ TILESET_TEXT = {
 }
 
 SCATTER_TILES = {
-    "pinky": (2, -3),
-    "blinky": (25, -3),
-    "clyde": (0, 32),
-    "inky": (27, 32),
+    "blinky": pygame.Vector2(25, -3),
+    "pinky": pygame.Vector2(2, -3),
+    "inky": pygame.Vector2(27, 32),
+    "clyde": pygame.Vector2(0, 32),
+}
+
+START_TILES = {
+    "blinky": pygame.Vector2(13, 11),
+    "pinky": pygame.Vector2(13.5, 14.5),
+    "inky": pygame.Vector2(11.5, 13.5),
+    "clyde": pygame.Vector2(15.5, 13.5),
+}
+
+HOME_COUNTER = {
+    "blinky": 0,
+    "pinky": 0,
+    "inky": 100,
+    "clyde": 150,
+}
+
+GHOST_COLOURS = {
+    "blinky": "red",
+    "pinky": "pink",
+    "inky": "cyan",
+    "clyde": "orange",
 }
 
 DIRECTIONS = {
